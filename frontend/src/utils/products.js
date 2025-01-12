@@ -269,6 +269,20 @@ export const productDataList = [
     quantity: 1,
     seller: "652ebf61b409f906d81645a3",
   },
+  {
+    productName: "APPLE iPhone 14 (Blue, 128 GB)",
+    price: {
+      mrp: 69999,
+      cost: 64199,
+      discountPercent: 30,
+    },
+    subcategory: 'Mobile Phones',
+    category: 'Electronics',
+    description: "Best smart phone under this price range compare to other phones in 2023 if you see overall build quality, performance and Camera with autofocus and video action mode are awesome 50% extra RAM compared to iPhone 13 and other more features. Best time to upgrade to iPhone 14 . ",
+    tagline: 'New Arrival',
+    quantity: 1,
+    seller: "652ebf61b409f906d81645a3",
+  },
 ];
 
 export const bannerData = [

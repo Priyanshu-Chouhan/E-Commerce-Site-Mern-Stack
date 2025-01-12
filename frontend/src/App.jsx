@@ -1,46 +1,51 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Home from './pages/Home'
-import ViewProduct from './pages/ViewProduct'
-import Navbar from './pages/Navbar'
-import AuthenticationPage from './pages/AuthenticationPage'
-import SellerDashboard from './pages/seller/SellerDashboard'
-import CustomerSearch from './pages/customer/pages/CustomerSearch'
-import Products from './components/Products';
 import { useEffect } from 'react';
-import { getProducts } from './redux/userHandle';
+import Home from './pages/Home';
+import ViewProduct from './pages/ViewProduct';
+import Navbar from './pages/Navbar';
+import AuthenticationPage from './pages/AuthenticationPage';
+import SellerDashboard from './pages/seller/SellerDashboard';
+import CustomerSearch from './pages/customer/pages/CustomerSearch';
+import Products from './components/Products';
 import CustomerOrders from './pages/customer/pages/CustomerOrders';
 import CheckoutSteps from './pages/customer/pages/CheckoutSteps';
 import Profile from './pages/customer/pages/Profile';
 import Logout from './pages/Logout';
+import { getProducts } from './redux/userHandle';
 import { isTokenValid } from './redux/userSlice';
 import CheckoutAftermath from './pages/customer/pages/CheckoutAftermath';
 import ViewOrder from './pages/customer/pages/ViewOrder';
 
 const App = () => {
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const { isLoggedIn, currentToken, currentRole, productData } = useSelector((state) => state.user);
 
-  const { isLoggedIn, currentToken, currentRole, productData } = useSelector(state => state.user);
+  // Access the environment variable
+  const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
+    console.log("API URL:", API_URL);
+
+    // Fetch products using the API URL
     dispatch(getProducts());
 
     if (currentToken) {
       dispatch(isTokenValid());
     }
-  }, [dispatch, currentToken]);
+  }, [dispatch, currentToken, API_URL]);
 
   return (
     <BrowserRouter>
-      {(!isLoggedIn && currentRole === null) &&
+      {(!isLoggedIn && currentRole === null) && (
         <>
           <Navbar />
 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Home" element={<Home />} />
-            <Route path='*' element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/" />} />
 
             <Route path="/Products" element={<Products productData={productData} />} />
 
@@ -55,16 +60,16 @@ const App = () => {
             <Route path="/Sellerlogin" element={<AuthenticationPage mode="Login" role="Seller" />} />
           </Routes>
         </>
-      }
+      )}
 
-      {(isLoggedIn && currentRole === "Customer") &&
+      {(isLoggedIn && currentRole === "Customer") && (
         <>
           <Navbar />
 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Home" element={<Home />} />
-            <Route path='*' element={<Navigate to="/" />} />
+            <Route path="*" element={<Navigate to="/" />} />
 
             <Route path="/Products" element={<Products productData={productData} />} />
 
@@ -83,16 +88,15 @@ const App = () => {
             <Route path="/Logout" element={<Logout />} />
           </Routes>
         </>
-      }
+      )}
 
       {(isLoggedIn && (currentRole === "Seller" || currentRole === "Shopcart")) && (
         <>
           <SellerDashboard />
         </>
       )}
+    </BrowserRouter>
+  );
+};
 
-    </BrowserRouter >
-  )
-}
-
-export default App
+export default App;

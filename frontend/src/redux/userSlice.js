@@ -151,11 +151,24 @@ const userSlice = createSlice({
             state.response = action.payload;
             state.error = null;
         },
+        //before
+        // authError: (state, action) => {
+        //     state.status = 'error';
+        //     state.response = null;
+        //     state.error = action.payload;
+        // },
+        //after
         authError: (state, action) => {
             state.status = 'error';
             state.response = null;
-            state.error = action.payload;
+            state.error = {
+                message: action.payload.message,
+                code: action.payload.code,
+                status: action.payload.response?.status,
+            };
         },
+        
+        
         authLogout: (state) => {
             localStorage.removeItem('user');
             state.status = 'idle';
